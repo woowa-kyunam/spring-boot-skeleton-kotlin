@@ -1,0 +1,34 @@
+spring:
+  profiles.active: local
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+---
+spring:
+  profiles: local
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: local
+    password: local
+    driver-class-name: org.h2.Driver
+  flyway:
+    enabled: false
+---
+spring:
+  profiles: dev
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://localhost:3306/skeleton?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    username: local
+    password: local
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: false

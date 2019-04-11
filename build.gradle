@@ -1,0 +1,73 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.2.RELEASE'
+        kotlinVersion = '1.3.21'
+        springBootProjectGroup = 'com.kyunam'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+    }
+}
+
+def static getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmmss')
+    return formattedDate
+}
+
+ext {
+    springBootProjectVersion = '0.0.0-' + getDate()
+}
+
+subprojects {
+    group "${springBootProjectGroup}"
+    version "${springBootProjectVersion}"
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'kotlin'
+    apply plugin: 'kotlin-spring'
+
+    sourceCompatibility = 1.8
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ["-Xjsr305=strict"]
+            jvmTarget = "1.8"
+        }
+    }
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ["-Xjsr305=strict"]
+            jvmTarget = "1.8"
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'junit', module: 'junit'
+        }
+        testCompile('org.junit.jupiter:junit-jupiter-api')
+        testCompile('org.junit.jupiter:junit-jupiter-params')
+        testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+        testImplementation('com.h2database:h2')
+        implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+    }
+}
+
+project(':skeleton-api')

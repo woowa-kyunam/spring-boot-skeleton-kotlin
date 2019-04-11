@@ -1,0 +1,27 @@
+version: '2'
+services:
+  db:
+    image: spring-boot-mysql:latest
+    container_name: db
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    ports:
+      - 3306:3306
+    networks:
+      - spring_net
+  app:
+    image: spring-boot:latest
+    container_name: app
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: docker/spring-boot/Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - spring_net
+networks:
+  spring_net:
