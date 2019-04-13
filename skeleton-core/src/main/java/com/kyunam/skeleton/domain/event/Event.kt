@@ -37,7 +37,10 @@ class Event(name: String?,
     )
     var address: Address? = null
         set(address) {
-            if (address == null || !address.isEmpty()) field = address else throw EventValidationException("이벤트 주소는 필수적으로 입력되어야 합니다.")
+            if (address != null && address.isEmpty()) {
+                throw EventValidationException("이벤트 주소는 필수적으로 입력되어야 합니다.")
+            }
+            field = address
         }
     @Column(name = "events_price", nullable = false)
     var price: Int? = null
