@@ -5,6 +5,7 @@ import com.kyunam.skeleton.common.TestObjectCreateUtil
 import com.kyunam.skeleton.common.exception.AccountValidationException
 import com.kyunam.skeleton.common.exception.EventValidationException
 import com.kyunam.skeleton.domain.account.Account
+import com.kyunam.skeleton.dto.account.AccountLoginDto
 import com.kyunam.skeleton.dto.account.AccountRequestDto
 import com.kyunam.skeleton.dto.account.AccountResponseDto
 import org.assertj.core.api.Assertions.assertThat
@@ -28,8 +29,13 @@ internal class AccountServiceTest {
 
     @Test
     fun `Create account and getAccount test`() {
+        //given
         var accountRequestDto: AccountRequestDto = TestObjectCreateUtil.getTestAccountRequestDto()
+
+        //when
         var accountResponseDto: AccountResponseDto = accountService.createAccount(accountRequestDto)
+
+        //then
         var savedAccount: Account = accountService.getAccount(accountResponseDto.id)
         assertThat(savedAccount.createDate).isNotNull()
         assertThat(savedAccount.lastModifiedDate).isNotNull()
@@ -38,9 +44,45 @@ internal class AccountServiceTest {
 
     @Test
     fun `Get account failure test`() {
+        //given
+        //when
         val exception = Assertions.assertThrows(AccountValidationException::class.java) {
             accountService.getAccount(0L)
         }
+
+        //then
         assertThat(exception.message).isEqualTo(messageSourceAccessor.getMessage(CustomMessageUtil.ACCOUNT_NOTFOUND))
+    }
+
+    @Test
+    fun `Login test`() {
+        //given
+        var accountRequestDto: AccountRequestDto = TestObjectCreateUtil.getTestAccountRequestDto()
+
+        //when
+        accountService.createAccount(accountRequestDto)
+        var savedAccount: Account = accountService.login(AccountLoginDto(
+                email = accountRequestDto.email,
+                password = accountRequestDto.password
+        ))
+
+        //then
+        assertThat(savedAccount.email).isEqualTo(accountRequestDto.email)
+    }
+
+    @Test
+    fun `Login failure test`() {
+        //given
+
+        //when
+        val exception = Assertions.assertThrows(AccountValidationException::class.java) {
+            accountService.login(AccountLoginDto(
+                    email = "1234",
+                    password = "1234"
+            ))
+        }
+
+        //then
+        assertThat(exception.message).isEqualTo(messageSourceAccessor.getMessage(CustomMessageUtil.INVALID_ACCOUNT))
     }
 }

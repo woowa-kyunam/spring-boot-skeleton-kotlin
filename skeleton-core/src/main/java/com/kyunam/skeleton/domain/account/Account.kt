@@ -3,6 +3,7 @@ package com.kyunam.skeleton.domain.account
 import com.kyunam.skeleton.common.BaseIdEntity
 import com.kyunam.skeleton.common.enum.UserRole
 import com.kyunam.skeleton.common.exception.AccountValidationException
+import org.springframework.security.crypto.password.PasswordEncoder
 import javax.persistence.*
 
 
@@ -32,6 +33,10 @@ class Account(email: String, password: String, username: String) : BaseIdEntity(
 
     fun addUserRole(role: UserRole) {
         this.userRole.add(role)
+    }
+
+    fun isMatchPassword(password: String, delegatingPasswordEncoder: PasswordEncoder): Boolean {
+        return delegatingPasswordEncoder.matches(password, this.password)
     }
 
     init {
