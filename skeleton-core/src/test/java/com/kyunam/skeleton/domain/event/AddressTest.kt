@@ -33,17 +33,8 @@ class AddressTest {
     }
 
     @Test
-    @DisplayName("온라인 이벤트 주소 객체 생성 테스트")
-    fun `create address online`() {
-        val address = Address.ofOnlineEvent()
-        assertThat(address.isOnline).isTrue()
-    }
-
-    @Test
     @DisplayName("주소 객체 empty 여부 테스트")
     fun `is empty address test`() {
-        val onlineAddress = Address.ofOnlineEvent()
-        assertThat(onlineAddress.isEmpty()).isFalse()
         val offlineAddress = Address(
                 localAddress = "지번 주소",
                 roadAddress = "도로명 주소",

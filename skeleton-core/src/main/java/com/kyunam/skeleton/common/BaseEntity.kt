@@ -15,22 +15,22 @@ import java.time.LocalDateTime
 open class BaseEntity {
     @CreatedBy
     @OneToOne
-    protected var createdBy: Account? = null
+    var createdBy: Account? = null
 
     @CreatedDate
-    protected var createDate: LocalDateTime? = null
+    var createDate: LocalDateTime? = null
 
     @LastModifiedBy
     @OneToOne
-    protected var lastModifiedBy: Account? = null
+    var lastModifiedBy: Account? = null
 
     @LastModifiedDate
-    protected var lastModifiedDate: LocalDateTime? = null
+    var lastModifiedDate: LocalDateTime? = null
 
     @Column(nullable = false)
-    protected var deleted: Boolean? = false
+    var deleted: Boolean? = false
 
-    protected fun delete() {
+    fun delete() {
         deleted = true
     }
 }

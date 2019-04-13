@@ -1,6 +1,6 @@
 package com.kyunam.skeleton.domain.event
 
-import com.kyunam.skeleton.common.TestEntityCreateUtil
+import com.kyunam.skeleton.common.TestObjectCreateUtil
 import com.kyunam.skeleton.common.exception.EventValidationException
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
@@ -12,8 +12,8 @@ class EventTest {
     @Test
     @DisplayName("Event 생성 테스트")
     fun `create event test`() {
-        val event = TestEntityCreateUtil.getTestEvent()
-        assertThat(event.name).isEqualTo(TestEntityCreateUtil.EVENT_NAME)
+        val event = TestObjectCreateUtil.getTestEvent()
+        assertThat(event.name).isEqualTo(TestObjectCreateUtil.EVENT_NAME)
     }
 
     @Test
@@ -22,14 +22,14 @@ class EventTest {
         val exception = org.junit.jupiter.api.Assertions.assertThrows(EventValidationException::class.java) {
             Event(
                     name = "",
-                    contents = TestEntityCreateUtil.EVENT_CONTENTS,
-                    address = TestEntityCreateUtil.getTestAddress(),
-                    price = TestEntityCreateUtil.EVENT_PRICE,
-                    availableParticipant = TestEntityCreateUtil.EVENT_AVAILABLE_PARTICIPANT,
-                    beginEnrollmentDateTime = TestEntityCreateUtil.EVENT_BEGIN_ENROLLMENT_DATETIME,
-                    endEnrollmentDateTime = TestEntityCreateUtil.EVENT_BEGIN_ENROLLMENT_DATETIME.plusDays(1),
-                    beginEventDateTime = TestEntityCreateUtil.EVENT_BEGIN_EVENT_DATETIME,
-                    endEventDateTime = TestEntityCreateUtil.EVENT_BEGIN_EVENT_DATETIME.plusHours(8)
+                    contents = TestObjectCreateUtil.EVENT_CONTENTS,
+                    address = TestObjectCreateUtil.getTestAddress(),
+                    price = TestObjectCreateUtil.EVENT_PRICE,
+                    availableParticipant = TestObjectCreateUtil.EVENT_AVAILABLE_PARTICIPANT,
+                    beginEnrollmentDateTime = TestObjectCreateUtil.EVENT_BEGIN_ENROLLMENT_DATETIME,
+                    endEnrollmentDateTime = TestObjectCreateUtil.EVENT_BEGIN_ENROLLMENT_DATETIME.plusDays(1),
+                    beginEventDateTime = TestObjectCreateUtil.EVENT_BEGIN_EVENT_DATETIME,
+                    endEventDateTime = TestObjectCreateUtil.EVENT_BEGIN_EVENT_DATETIME.plusHours(8)
             )
         }
         Assertions.assertThat(exception.message).isEqualTo("이벤트 이름은 필수 정보입니다.")

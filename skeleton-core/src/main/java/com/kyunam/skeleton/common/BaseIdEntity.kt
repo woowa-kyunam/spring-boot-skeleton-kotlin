@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass
 open class BaseIdEntity : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected var id: Long? = null
+    var id: Long = 0L
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -21,7 +21,6 @@ open class BaseIdEntity : BaseEntity() {
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return id.hashCode()
     }
-
 }
