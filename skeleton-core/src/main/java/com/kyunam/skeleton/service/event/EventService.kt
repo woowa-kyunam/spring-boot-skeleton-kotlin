@@ -42,4 +42,11 @@ class EventService(
                 endEventDateTime = eventRequestDto.endEventDateTime
         )))
     }
+
+    @Transactional
+    fun updateEvent(id: Long, eventRequestDto: EventDto.EventRequestDto, account: Account): EventDto.EventResponseDto {
+        var savedEvent = getEvent(id)
+        savedEvent.updateEvent(account, eventRequestDto)
+        return EventDto.EventResponseDto.toPersonRecord(savedEvent)
+    }
 }

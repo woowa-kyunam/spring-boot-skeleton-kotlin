@@ -1,13 +1,11 @@
 package com.kyunam.skeleton.service.event
 
 import com.kyunam.skeleton.common.TestObjectCreateUtil
+import com.kyunam.skeleton.common.exception.UnAuthorizationException
 import com.kyunam.skeleton.domain.account.Account
 import com.kyunam.skeleton.repository.account.AccountRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
@@ -48,5 +46,39 @@ class EventServiceTest {
         //then
         assertThat(eventResponseDto.name).isEqualTo(eventRequestDto.name)
         assertThat(eventResponseDto.register.email).isEqualTo(defaultAccount.email)
+    }
+
+    @Test
+    @DisplayName("이벤트 업데이트 테스트")
+    fun `Update event test`() {
+        //given
+        var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
+        val eventResponseDto = eventService.createEvent(eventRequestDto, defaultAccount)
+        val updateEventName = "변경된 이벤트 이름"
+        eventRequestDto.name = updateEventName
+
+        //when
+        val updatedEventResponseDto = eventService.updateEvent(eventResponseDto.id, eventRequestDto, defaultAccount)
+
+        //then
+        assertThat(updatedEventResponseDto.name).isEqualTo(updateEventName)
+    }
+
+    @Test
+    @DisplayName("이벤트 업데이트 권한 실패 테스트")
+    fun `Update event failure test`() {
+        //given
+        var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
+        val eventResponseDto = eventService.createEvent(eventRequestDto, defaultAccount)
+        val updateEventName = "변경된 이벤트 이름"
+        eventRequestDto.name = updateEventName
+
+        //when
+        val exception = Assertions.assertThrows(UnAuthorizationException::class.java) {
+            eventService.updateEvent(eventResponseDto.id, eventRequestDto, anotherAccount)
+        }
+
+        //then
+        assertThat(exception.message).isEqualTo("이벤트 등록자만 수정할 수 있습니다.")
     }
 }

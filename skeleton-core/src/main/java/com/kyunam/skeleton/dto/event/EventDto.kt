@@ -13,43 +13,43 @@ import javax.validation.constraints.NotNull
 class EventDto {
     data class EventRequestDto(
             @field:NotNull
-            val name: String,
+            var name: String,
             @field:NotNull
-            val contents: String,
+            var contents: String,
             @field:Min(Event.MIN_PRICE.toLong())
             @field:Max(Event.MAX_PRICE.toLong())
-            val price: Int,
-            val address: Address,
+            var price: Int,
+            var address: Address,
             @field:NotNull
-            val beginEnrollmentDateTime: LocalDateTime,
+            var beginEnrollmentDateTime: LocalDateTime,
             @field:NotNull
-            val endEnrollmentDateTime: LocalDateTime,
+            var endEnrollmentDateTime: LocalDateTime,
             @field:NotNull
-            val beginEventDateTime: LocalDateTime,
+            var beginEventDateTime: LocalDateTime,
             @field:NotNull
-            val endEventDateTime: LocalDateTime,
+            var endEventDateTime: LocalDateTime,
             @field:Min(Event.MIN_PARTICIPANT.toLong())
             @field:Max(Event.MAX_PARTICIPANT.toLong())
-            val availableParticipant: Int
+            var availableParticipant: Int
     )
 
     data class EventResponseDto(
-            val id: Long,
-            val name: String?,
-            val contents: String?,
-            val price: Int?,
-            val address: Address?,
+            var id: Long,
+            var name: String?,
+            var contents: String?,
+            var price: Int?,
+            var address: Address?,
             @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-            val beginEnrollmentDateTime: LocalDateTime,
+            var beginEnrollmentDateTime: LocalDateTime,
             @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-            val endEnrollmentDateTime: LocalDateTime,
+            var endEnrollmentDateTime: LocalDateTime,
             @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-            val beginEventDateTime: LocalDateTime,
+            var beginEventDateTime: LocalDateTime,
             @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-            val endEventDateTime: LocalDateTime,
-            val availableParticipant: Int?,
-            val register: AccountDto.AccountResponseDto,
-            val eventStatus: EventStatus
+            var endEventDateTime: LocalDateTime,
+            var availableParticipant: Int?,
+            var register: AccountDto.AccountResponseDto,
+            var eventStatus: EventStatus
     ) {
         companion object {
             fun toPersonRecord(event: Event) = EventResponseDto(
