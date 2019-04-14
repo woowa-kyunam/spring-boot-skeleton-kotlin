@@ -23,8 +23,12 @@ class EventService(
         return eventRepository.findAll()
     }
 
-    fun getEvent(id: Long): Event {
+    private fun findById(id: Long): Event {
         return eventRepository.findByIdAndDeletedFalse(id).orElseThrow { EventValidationException(messageSourceAccessor.getMessage(CustomMessageUtil.EVENT_NOTFOUND)) }
+    }
+
+    fun getEvent(id: Long): EventDto.EventResponseDto {
+        return EventDto.EventResponseDto.toPersonRecord(findById(id))
     }
 
     @Transactional
@@ -45,14 +49,14 @@ class EventService(
 
     @Transactional
     fun updateEvent(id: Long, eventRequestDto: EventDto.EventRequestDto, account: Account): EventDto.EventResponseDto {
-        var savedEvent = getEvent(id)
+        var savedEvent = findById(id)
         savedEvent.updateEvent(account, eventRequestDto)
         return EventDto.EventResponseDto.toPersonRecord(savedEvent)
     }
 
     @Transactional
     fun deleteEvent(id: Long, account: Account): EventDto.EventResponseDto {
-        var savedEvent = getEvent(id)
+        var savedEvent = findById(id)
         savedEvent.delete(account)
         return EventDto.EventResponseDto.toPersonRecord(savedEvent)
     }
