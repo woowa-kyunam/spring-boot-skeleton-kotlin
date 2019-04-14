@@ -1,7 +1,6 @@
 package com.kyunam.skeleton.domain.event
 
 import com.kyunam.skeleton.common.exception.EventValidationException
-import javax.persistence.Column
 import javax.persistence.Embeddable
 
 
@@ -14,12 +13,7 @@ class Address {
         this.postalCode = postalCode
     }
 
-    private constructor(isOnline: Boolean) {
-        this.isOnline = isOnline
-    }
-
     fun isEmpty(): Boolean {
-        if (this.isOnline) return false
         if (this.localAddress.isNullOrEmpty()) return true
         if (this.roadAddress.isNullOrEmpty()) return true
         if (this.postalCode.isNullOrEmpty()) return true
@@ -38,12 +32,4 @@ class Address {
         set(postalCode) {
             if(!postalCode.isNullOrEmpty()) field = postalCode else throw EventValidationException("우편번호는 필수 정보입니다.")
         }
-    @Column(nullable = false)
-    var isOnline: Boolean = false
-
-    companion object {
-        fun ofOnlineEvent(): Address {
-            return Address(true)
-        }
-    }
 }

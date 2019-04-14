@@ -3,13 +3,15 @@ package com.kyunam.skeleton.common
 import com.kyunam.skeleton.domain.account.Account
 import com.kyunam.skeleton.domain.event.Address
 import com.kyunam.skeleton.domain.event.Event
+import com.kyunam.skeleton.dto.account.AccountDto
+import com.kyunam.skeleton.dto.event.EventDto
 import java.time.LocalDateTime
 
 
-class TestEntityCreateUtil {
+class TestObjectCreateUtil {
     companion object {
         const val ACCOUNT_EMAIL = "tramyu@naver.com"
-        const val ACCOUNT_PASSWORD = "1234567"
+        const val ACCOUNT_PASSWORD = "12345678#123"
         const val ACCOUNT_USERNAME = "규남"
         const val EVENT_NAME = "공부할게 많은 이벤트"
         const val EVENT_CONTENTS = "Golang, kotlin, typescript, k8s ..."
@@ -35,6 +37,29 @@ class TestEntityCreateUtil {
 
         fun getTestEvent(): Event {
             return Event(
+                    name = EVENT_NAME,
+                    contents = EVENT_CONTENTS,
+                    address = getTestAddress(),
+                    price = EVENT_PRICE,
+                    register = getTestAccount(),
+                    availableParticipant = EVENT_AVAILABLE_PARTICIPANT,
+                    beginEnrollmentDateTime = EVENT_BEGIN_ENROLLMENT_DATETIME,
+                    endEnrollmentDateTime = EVENT_BEGIN_ENROLLMENT_DATETIME.plusDays(1),
+                    beginEventDateTime = EVENT_BEGIN_EVENT_DATETIME,
+                    endEventDateTime = EVENT_BEGIN_EVENT_DATETIME.plusHours(8)
+            )
+        }
+
+        fun getTestAccountRequestDto(): AccountDto.AccountRequestDto {
+            return AccountDto.AccountRequestDto(
+                    email = ACCOUNT_EMAIL,
+                    password = ACCOUNT_PASSWORD,
+                    username = ACCOUNT_USERNAME
+            )
+        }
+
+        fun getTestEventRequestDto(): EventDto.EventRequestDto {
+            return EventDto.EventRequestDto(
                     name = EVENT_NAME,
                     contents = EVENT_CONTENTS,
                     address = getTestAddress(),
