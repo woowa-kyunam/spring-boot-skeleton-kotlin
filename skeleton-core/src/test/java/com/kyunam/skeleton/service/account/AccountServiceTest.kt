@@ -3,11 +3,8 @@ package com.kyunam.skeleton.service.account
 import com.kyunam.skeleton.common.CustomMessageUtil
 import com.kyunam.skeleton.common.TestObjectCreateUtil
 import com.kyunam.skeleton.common.exception.AccountValidationException
-import com.kyunam.skeleton.common.exception.EventValidationException
 import com.kyunam.skeleton.domain.account.Account
-import com.kyunam.skeleton.dto.account.AccountLoginDto
-import com.kyunam.skeleton.dto.account.AccountRequestDto
-import com.kyunam.skeleton.dto.account.AccountResponseDto
+import com.kyunam.skeleton.dto.account.AccountDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -30,10 +27,10 @@ internal class AccountServiceTest {
     @Test
     fun `Create account and getAccount test`() {
         //given
-        var accountRequestDto: AccountRequestDto = TestObjectCreateUtil.getTestAccountRequestDto()
+        var accountRequestDto: AccountDto.AccountRequestDto = TestObjectCreateUtil.getTestAccountRequestDto()
 
         //when
-        var accountResponseDto: AccountResponseDto = accountService.createAccount(accountRequestDto)
+        var accountResponseDto: AccountDto.AccountResponseDto = accountService.createAccount(accountRequestDto)
 
         //then
         var savedAccount: Account = accountService.getAccount(accountResponseDto.id)
@@ -57,11 +54,11 @@ internal class AccountServiceTest {
     @Test
     fun `Login test`() {
         //given
-        var accountRequestDto: AccountRequestDto = TestObjectCreateUtil.getTestAccountRequestDto()
+        var accountRequestDto: AccountDto.AccountRequestDto = TestObjectCreateUtil.getTestAccountRequestDto()
 
         //when
         accountService.createAccount(accountRequestDto)
-        var savedAccount: Account = accountService.login(AccountLoginDto(
+        var savedAccount: Account = accountService.login(AccountDto.AccountLoginDto(
                 email = accountRequestDto.email,
                 password = accountRequestDto.password
         ))
@@ -76,7 +73,7 @@ internal class AccountServiceTest {
 
         //when
         val exception = Assertions.assertThrows(AccountValidationException::class.java) {
-            accountService.login(AccountLoginDto(
+            accountService.login(AccountDto.AccountLoginDto(
                     email = "1234",
                     password = "1234"
             ))

@@ -2,6 +2,7 @@ package com.kyunam.skeleton.domain.event
 
 import com.kyunam.skeleton.common.TestObjectCreateUtil
 import com.kyunam.skeleton.common.exception.EventValidationException
+import com.kyunam.skeleton.domain.account.Account
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -25,6 +26,7 @@ class EventTest {
                     contents = TestObjectCreateUtil.EVENT_CONTENTS,
                     address = TestObjectCreateUtil.getTestAddress(),
                     price = TestObjectCreateUtil.EVENT_PRICE,
+                    register = TestObjectCreateUtil.getTestAccount(),
                     availableParticipant = TestObjectCreateUtil.EVENT_AVAILABLE_PARTICIPANT,
                     beginEnrollmentDateTime = TestObjectCreateUtil.EVENT_BEGIN_ENROLLMENT_DATETIME,
                     endEnrollmentDateTime = TestObjectCreateUtil.EVENT_BEGIN_ENROLLMENT_DATETIME.plusDays(1),

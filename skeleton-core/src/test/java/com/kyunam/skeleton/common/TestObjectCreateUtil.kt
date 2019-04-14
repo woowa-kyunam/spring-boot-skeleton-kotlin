@@ -3,7 +3,8 @@ package com.kyunam.skeleton.common
 import com.kyunam.skeleton.domain.account.Account
 import com.kyunam.skeleton.domain.event.Address
 import com.kyunam.skeleton.domain.event.Event
-import com.kyunam.skeleton.dto.account.AccountRequestDto
+import com.kyunam.skeleton.dto.account.AccountDto
+import com.kyunam.skeleton.dto.event.EventDto
 import java.time.LocalDateTime
 
 
@@ -40,6 +41,7 @@ class TestObjectCreateUtil {
                     contents = EVENT_CONTENTS,
                     address = getTestAddress(),
                     price = EVENT_PRICE,
+                    register = getTestAccount(),
                     availableParticipant = EVENT_AVAILABLE_PARTICIPANT,
                     beginEnrollmentDateTime = EVENT_BEGIN_ENROLLMENT_DATETIME,
                     endEnrollmentDateTime = EVENT_BEGIN_ENROLLMENT_DATETIME.plusDays(1),
@@ -48,11 +50,25 @@ class TestObjectCreateUtil {
             )
         }
 
-        fun getTestAccountRequestDto(): AccountRequestDto {
-            return AccountRequestDto(
+        fun getTestAccountRequestDto(): AccountDto.AccountRequestDto {
+            return AccountDto.AccountRequestDto(
                     email = ACCOUNT_EMAIL,
                     password = ACCOUNT_PASSWORD,
                     username = ACCOUNT_USERNAME
+            )
+        }
+
+        fun getTestEventRequestDto(): EventDto.EventRequestDto {
+            return EventDto.EventRequestDto(
+                    name = EVENT_NAME,
+                    contents = EVENT_CONTENTS,
+                    address = getTestAddress(),
+                    price = EVENT_PRICE,
+                    availableParticipant = EVENT_AVAILABLE_PARTICIPANT,
+                    beginEnrollmentDateTime = EVENT_BEGIN_ENROLLMENT_DATETIME,
+                    endEnrollmentDateTime = EVENT_BEGIN_ENROLLMENT_DATETIME.plusDays(1),
+                    beginEventDateTime = EVENT_BEGIN_EVENT_DATETIME,
+                    endEventDateTime = EVENT_BEGIN_EVENT_DATETIME.plusHours(8)
             )
         }
     }

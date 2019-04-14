@@ -2,8 +2,8 @@ package com.kyunam.skeleton.common
 
 class CustomMessageUtil {
     companion object {
-        val EVENT_NOTFOUND = "NotFound.event"
-        val INVALID_ACCOUNT = "UnAuthentication.invalid.account"
-        val ACCOUNT_NOTFOUND = "NotFound.account"
+        const val EVENT_NOTFOUND = "NotFound.event"
+        const val INVALID_ACCOUNT = "UnAuthentication.invalid.account"
+        const val ACCOUNT_NOTFOUND = "NotFound.account"
     }
 }

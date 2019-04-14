@@ -24,11 +24,13 @@ class AddressTest {
     @Test
     @DisplayName("Attendance 객체 생성 Validation 테스트")
     fun `create fail address test`() {
-        val exception = Assertions.assertThrows(EventValidationException::class.java) {Address(
-                localAddress = "",
-                roadAddress = "도로명 주소",
-                postalCode = "12345"
-        ) }
+        val exception = Assertions.assertThrows(EventValidationException::class.java) {
+            Address(
+                    localAddress = "",
+                    roadAddress = "도로명 주소",
+                    postalCode = "12345"
+            )
+        }
         assertThat(exception.message).isEqualTo("지번 주소는 필수 정보입니다.")
     }
 
