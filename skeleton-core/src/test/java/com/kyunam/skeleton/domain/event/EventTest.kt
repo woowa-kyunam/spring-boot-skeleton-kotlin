@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("Event 도메인 테스트")
-class EventTest {
+internal class EventTest {
     @Test
     @DisplayName("Event 생성 테스트")
     fun `create event test`() {

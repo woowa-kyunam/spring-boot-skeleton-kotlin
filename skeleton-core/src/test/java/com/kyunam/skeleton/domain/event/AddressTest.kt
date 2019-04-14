@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("Attendance 테스트")
-class AddressTest {
+internal class AddressTest {
     @Test
     @DisplayName("Attendance 객체 생성 테스트")
     fun `create address test`() {
