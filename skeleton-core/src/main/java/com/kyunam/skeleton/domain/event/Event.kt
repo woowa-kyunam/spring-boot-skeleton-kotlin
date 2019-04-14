@@ -159,6 +159,18 @@ class Event(name: String?,
         this.price = eventRequestDto.price
     }
 
+    @Override
+    fun delete(account: Account) {
+        if (!isEventOwner(account)) {
+            throw UnAuthorizationException("이벤트 등록자만 삭제할 수 있습니다.")
+        }
+
+        if (!attendances.isEmpty()) {
+            throw EventValidationException("이벤트 참여자가 1명이라도 존재하면 이벤트를 삭제할 수 없습니다.")
+        }
+        super.delete()
+    }
+
     private fun isBeforeOfAmendDeadLine(): Boolean {
         val deadLine = beginEventDateTime.minusDays(7)
         return !LocalDateTime.now().isAfter(deadLine)

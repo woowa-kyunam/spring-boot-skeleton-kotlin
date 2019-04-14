@@ -1,6 +1,8 @@
 package com.kyunam.skeleton.service.event
 
+import com.kyunam.skeleton.common.CustomMessageUtil
 import com.kyunam.skeleton.common.TestObjectCreateUtil
+import com.kyunam.skeleton.common.exception.EventValidationException
 import com.kyunam.skeleton.common.exception.UnAuthorizationException
 import com.kyunam.skeleton.domain.account.Account
 import com.kyunam.skeleton.repository.account.AccountRepository
@@ -8,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.support.MessageSourceAccessor
 import org.springframework.transaction.annotation.Transactional
 
 
@@ -21,6 +24,8 @@ class EventServiceTest {
     private lateinit var eventService: EventService
     @Autowired
     private lateinit var accountRepository: AccountRepository
+    @Autowired
+    private lateinit var messageSourceAccessor: MessageSourceAccessor
     private lateinit var defaultAccount: Account
     private lateinit var anotherAccount: Account
 
@@ -80,5 +85,38 @@ class EventServiceTest {
 
         //then
         assertThat(exception.message).isEqualTo("이벤트 등록자만 수정할 수 있습니다.")
+    }
+
+    @Test
+    @DisplayName("이벤트 삭제 테스트")
+    fun `Delete event test`() {
+        //given
+        var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
+        val eventResponseDto = eventService.createEvent(eventRequestDto, defaultAccount)
+
+        //when
+        eventService.deleteEvent(eventResponseDto.id, defaultAccount)
+        val exception = Assertions.assertThrows(EventValidationException::class.java) {
+            eventService.getEvent(eventResponseDto.id)
+        }
+
+        //then
+        assertThat(exception.message).isEqualTo(messageSourceAccessor.getMessage(CustomMessageUtil.EVENT_NOTFOUND))
+    }
+
+    @Test
+    @DisplayName("이벤트 삭제 권한 실패 테스트")
+    fun `Delete event failure test`() {
+        //given
+        var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
+        val eventResponseDto = eventService.createEvent(eventRequestDto, defaultAccount)
+
+        //when
+        val exception = Assertions.assertThrows(UnAuthorizationException::class.java) {
+            eventService.deleteEvent(eventResponseDto.id, anotherAccount)
+        }
+
+        //then
+        assertThat(exception.message).isEqualTo("이벤트 등록자만 삭제할 수 있습니다.")
     }
 }
