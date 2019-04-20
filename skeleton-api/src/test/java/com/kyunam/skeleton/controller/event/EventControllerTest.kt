@@ -10,6 +10,7 @@ import com.kyunam.skeleton.service.account.AccountService
 import com.kyunam.skeleton.service.event.EventService
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
@@ -20,8 +21,7 @@ import org.springframework.context.support.MessageSourceAccessor
 import org.springframework.http.MediaType
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -47,6 +47,7 @@ internal class EventControllerTest : ControllerTest() {
     }
 
     @Test
+    @DisplayName("이벤트 생성 테스트")
     fun `create event api test`() {
         var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
 
@@ -76,6 +77,7 @@ internal class EventControllerTest : ControllerTest() {
     }
 
     @Test
+    @DisplayName("이벤트 생성 시 Validation 예외 발생 테스트")
     fun `create event api validation failure test`() {
         var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
         eventRequestDto.name = ""
@@ -92,6 +94,7 @@ internal class EventControllerTest : ControllerTest() {
     }
 
     @Test
+    @DisplayName("이벤트 업데이트 테스트")
     fun `update event api test`() {
         var eventId = 1L
         var eventRequestDto = TestObjectCreateUtil.getTestEventRequestDto()
@@ -130,6 +133,7 @@ internal class EventControllerTest : ControllerTest() {
     }
 
     @Test
+    @DisplayName("이벤트 업데이트 시 권한이 없어 실패하는 경우의 테스트")
     fun `update event api failure test`() {
         var eventId = 1L
 
@@ -148,9 +152,26 @@ internal class EventControllerTest : ControllerTest() {
                 .content(this.objectMapper.writeValueAsString(updateEventRequest)))
                 .andDo(print())
                 .andExpect(status().isForbidden)
-                .andExpect(jsonPath("timestamp").exists())
-                .andExpect(jsonPath("status").exists())
-                .andExpect(jsonPath("errorMessage").exists())
-                .andExpect(jsonPath("debugMessage").exists())
+                .andExpect(jsonPath("content").exists())
+    }
+
+    @Test
+    @DisplayName("이벤트 삭제 테스트")
+    fun `delete event api test`() {
+        var eventId = 1L
+
+        var deletedEventResponse = TestObjectCreateUtil.getTestEvent()
+
+        given(eventService.deleteEvent(eventId, accountService.login(TestObjectCreateUtil.getTestAccountLoginDto()))
+        ).willReturn(EventDto.EventResponseDto.toPersonRecord(deletedEventResponse))
+
+        this.mockMvc.perform(delete("/api/v1/events/$eventId").with(httpBasic(TestObjectCreateUtil.ACCOUNT_EMAIL, TestObjectCreateUtil.ACCOUNT_PASSWORD)))
+                .andDo(print())
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("id").exists())
+                .andExpect(jsonPath("_links").hasJsonPath())
+                .andExpect(jsonPath("_links.self").hasJsonPath())
+                .andExpect(jsonPath("_links.events").hasJsonPath())
+                .andExpect(jsonPath("_links.profile").hasJsonPath())
     }
 }
