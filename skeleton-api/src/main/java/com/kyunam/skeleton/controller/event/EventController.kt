@@ -36,6 +36,18 @@ class EventController(
         return ResponseEntity.created(uri).body(resource)
     }
 
+    @PatchMapping("/{id}")
+    fun updateEvent(@PathVariable id: Long, @RequestBody @Valid eventRequestDto: EventDto.EventRequestDto, errors: Errors, @LoginUser loginUser: Account): ResponseEntity<*> {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors)
+        }
+        val updatedEventResponse = eventService.updateEvent(id, eventRequestDto, loginUser)
+        val resource = getDefaultEventResource(updatedEventResponse)
+        resource.add(linkTo(EventController::class.java).slash(updatedEventResponse.id).withRel("delete"))
+        resource.add(Link("/docs/index.html#resources-events-update", "profile"))
+        return ResponseEntity.ok(resource)
+    }
+
     private fun getDefaultEventResource(event: EventDto.EventResponseDto): Resource<EventDto.EventResponseDto> {
         val resource = Resource<EventDto.EventResponseDto>(event)
         resource.add(linkTo(EventController::class.java).slash(event.id).withSelfRel())

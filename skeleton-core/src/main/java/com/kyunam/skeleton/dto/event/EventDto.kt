@@ -5,17 +5,17 @@ import com.kyunam.skeleton.common.enum.EventStatus
 import com.kyunam.skeleton.domain.event.Address
 import com.kyunam.skeleton.domain.event.Event
 import com.kyunam.skeleton.dto.account.AccountDto
-import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 class EventDto {
     data class EventRequestDto(
-            @field:NotNull
+            @field:NotEmpty
             var name: String,
-            @field:NotNull
+            @field:NotEmpty
             var contents: String,
             @field:Min(Event.MIN_PRICE.toLong())
             @field:Max(Event.MAX_PRICE.toLong())

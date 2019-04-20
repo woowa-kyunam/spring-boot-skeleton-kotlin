@@ -32,8 +32,8 @@ class ErrorSerializer(
             } catch (ex: IOException) {
                 ex.printStackTrace()
             }
-
         }
+        gen.writeEndArray()
     }
 
     private fun getErrorMessage(fieldError: FieldError): String? {
