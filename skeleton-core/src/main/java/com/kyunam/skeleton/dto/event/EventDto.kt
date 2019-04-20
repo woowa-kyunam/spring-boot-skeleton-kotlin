@@ -5,6 +5,7 @@ import com.kyunam.skeleton.common.enum.EventStatus
 import com.kyunam.skeleton.domain.event.Address
 import com.kyunam.skeleton.domain.event.Event
 import com.kyunam.skeleton.dto.account.AccountDto
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -21,12 +22,16 @@ class EventDto {
             var price: Int,
             var address: Address,
             @field:NotNull
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var beginEnrollmentDateTime: LocalDateTime,
             @field:NotNull
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var endEnrollmentDateTime: LocalDateTime,
             @field:NotNull
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var beginEventDateTime: LocalDateTime,
             @field:NotNull
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var endEventDateTime: LocalDateTime,
             @field:Min(Event.MIN_PARTICIPANT.toLong())
             @field:Max(Event.MAX_PARTICIPANT.toLong())
@@ -39,13 +44,13 @@ class EventDto {
             var contents: String?,
             var price: Int?,
             var address: Address?,
-            @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var beginEnrollmentDateTime: LocalDateTime,
-            @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var endEnrollmentDateTime: LocalDateTime,
-            @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var beginEventDateTime: LocalDateTime,
-            @field:JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+            @field:JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
             var endEventDateTime: LocalDateTime,
             var availableParticipant: Int?,
             var register: AccountDto.AccountResponseDto,
@@ -53,7 +58,7 @@ class EventDto {
     ) {
         companion object {
             fun toPersonRecord(event: Event) = EventResponseDto(
-                    id = event.id,
+                    id = event.id!!,
                     name = event.name,
                     contents = event.contents,
                     price = event.price,

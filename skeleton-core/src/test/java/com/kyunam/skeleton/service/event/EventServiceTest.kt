@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @DisplayName("이벤트 서비스 테스트")
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 internal class EventServiceTest {
 
     @Autowired

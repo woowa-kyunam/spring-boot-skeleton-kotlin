@@ -4,14 +4,12 @@ import com.kyunam.skeleton.common.exception.EventValidationException
 import javax.persistence.Embeddable
 
 
-
 @Embeddable
-class Address {
-    constructor(localAddress: String, roadAddress: String, postalCode: String) {
-        this.localAddress = localAddress
-        this.roadAddress = roadAddress
-        this.postalCode = postalCode
-    }
+class Address(
+        localAddress: String,
+        roadAddress: String,
+        postalCode: String
+) {
 
     fun isEmpty(): Boolean {
         if (this.localAddress.isNullOrEmpty()) return true
@@ -44,11 +42,18 @@ class Address {
         }
     var roadAddress: String = ""
         set(roadAddress) {
-            if(!roadAddress.isNullOrEmpty()) field = roadAddress else throw EventValidationException("도로명 주소는 필수 정보입니다.")
+            if (!roadAddress.isNullOrEmpty()) field = roadAddress else throw EventValidationException("도로명 주소는 필수 정보입니다.")
         }
     var postalCode: String = ""
         set(postalCode) {
-            if(!postalCode.isNullOrEmpty()) field = postalCode else throw EventValidationException("우편번호는 필수 정보입니다.")
+            if (!postalCode.isNullOrEmpty()) field = postalCode else throw EventValidationException("우편번호는 필수 정보입니다.")
         }
+
+    init {
+        this.localAddress = localAddress
+        this.roadAddress = roadAddress
+        this.postalCode = postalCode
+    }
+
 
 }
