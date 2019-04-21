@@ -1,12 +1,63 @@
 package com.kyunam.skeleton.service.event
 
+import com.kyunam.skeleton.common.CustomMessageUtil
+import com.kyunam.skeleton.common.exception.EventValidationException
+import com.kyunam.skeleton.domain.account.Account
 import com.kyunam.skeleton.domain.event.Event
+import com.kyunam.skeleton.dto.event.EventDto
 import com.kyunam.skeleton.repository.event.EventRepository
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.support.MessageSourceAccessor
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.lang.Integer.parseInt
 
 @Service
-class EventService (private val eventRepository: EventRepository) {
+@Transactional(readOnly = true)
+class EventService(
+        private val messageSourceAccessor: MessageSourceAccessor,
+        private val eventRepository: EventRepository
+
+) {
     fun readAllEvent(): List<Event> {
         return eventRepository.findAll()
+    }
+
+    private fun findById(id: Long): Event {
+        return eventRepository.findByIdAndDeletedFalse(id).orElseThrow { EventValidationException(messageSourceAccessor.getMessage(CustomMessageUtil.EVENT_NOTFOUND)) }
+    }
+
+    fun getEvent(id: Long): EventDto.EventResponseDto {
+        return EventDto.EventResponseDto.toPersonRecord(findById(id))
+    }
+
+    @Transactional
+    fun createEvent(eventRequestDto: EventDto.EventRequestDto, register: Account): EventDto.EventResponseDto {
+        return EventDto.EventResponseDto.toPersonRecord(eventRepository.save(Event(
+                name = eventRequestDto.name,
+                contents = eventRequestDto.contents,
+                address = eventRequestDto.address,
+                price = eventRequestDto.price,
+                register = register,
+                availableParticipant = eventRequestDto.availableParticipant,
+                beginEnrollmentDateTime = eventRequestDto.beginEnrollmentDateTime,
+                endEnrollmentDateTime = eventRequestDto.endEnrollmentDateTime,
+                beginEventDateTime = eventRequestDto.beginEventDateTime,
+                endEventDateTime = eventRequestDto.endEventDateTime
+        )))
+    }
+
+    @Transactional
+    fun updateEvent(id: Long, eventRequestDto: EventDto.EventRequestDto, account: Account): EventDto.EventResponseDto {
+        var savedEvent = findById(id)
+        savedEvent.updateEvent(account, eventRequestDto)
+        return EventDto.EventResponseDto.toPersonRecord(savedEvent)
+    }
+
+    @Transactional
+    fun deleteEvent(id: Long, account: Account): EventDto.EventResponseDto {
+        var savedEvent = findById(id)
+        savedEvent.delete(account)
+        return EventDto.EventResponseDto.toPersonRecord(savedEvent)
     }
 }

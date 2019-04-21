@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("Attendance 테스트")
-class AddressTest {
+internal class AddressTest {
     @Test
     @DisplayName("Attendance 객체 생성 테스트")
     fun `create address test`() {
@@ -24,26 +24,19 @@ class AddressTest {
     @Test
     @DisplayName("Attendance 객체 생성 Validation 테스트")
     fun `create fail address test`() {
-        val exception = Assertions.assertThrows(EventValidationException::class.java) {Address(
-                localAddress = "",
-                roadAddress = "도로명 주소",
-                postalCode = "12345"
-        ) }
+        val exception = Assertions.assertThrows(EventValidationException::class.java) {
+            Address(
+                    localAddress = "",
+                    roadAddress = "도로명 주소",
+                    postalCode = "12345"
+            )
+        }
         assertThat(exception.message).isEqualTo("지번 주소는 필수 정보입니다.")
-    }
-
-    @Test
-    @DisplayName("온라인 이벤트 주소 객체 생성 테스트")
-    fun `create address online`() {
-        val address = Address.ofOnlineEvent()
-        assertThat(address.isOnline).isTrue()
     }
 
     @Test
     @DisplayName("주소 객체 empty 여부 테스트")
     fun `is empty address test`() {
-        val onlineAddress = Address.ofOnlineEvent()
-        assertThat(onlineAddress.isEmpty()).isFalse()
         val offlineAddress = Address(
                 localAddress = "지번 주소",
                 roadAddress = "도로명 주소",

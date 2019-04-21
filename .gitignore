@@ -28,3 +28,5 @@
 /.nb-gradle/
 
 node_modules
+
+**/docs/

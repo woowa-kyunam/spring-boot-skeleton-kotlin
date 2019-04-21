@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 @DataJpaTest
 @DisplayName("이벤트 Repository Test")
-class EventRepositoryTest @Autowired constructor(
+internal class EventRepositoryTest @Autowired constructor(
         private val eventRepository: EventRepository
 ) {
     @Test

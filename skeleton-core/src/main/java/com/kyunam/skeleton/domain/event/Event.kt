@@ -1,8 +1,11 @@
 package com.kyunam.skeleton.domain.event
 
 import com.kyunam.skeleton.common.BaseIdEntity
+import com.kyunam.skeleton.common.enum.EventStatus
 import com.kyunam.skeleton.common.exception.EventValidationException
+import com.kyunam.skeleton.common.exception.UnAuthorizationException
 import com.kyunam.skeleton.domain.account.Account
+import com.kyunam.skeleton.dto.event.EventDto
 import org.springframework.util.ObjectUtils
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -14,10 +17,12 @@ class Event(name: String?,
             address: Address?,
             price: Int?,
             availableParticipant: Int,
+            register: Account?,
             beginEnrollmentDateTime: LocalDateTime,
             endEnrollmentDateTime: LocalDateTime,
             beginEventDateTime: LocalDateTime,
-            endEventDateTime: LocalDateTime) : BaseIdEntity() {
+            endEventDateTime: LocalDateTime
+) : BaseIdEntity() {
 
     @Column(name = "events_name", nullable = false)
     var name: String? = null
@@ -37,7 +42,10 @@ class Event(name: String?,
     )
     var address: Address? = null
         set(address) {
-            if (address == null || !address.isEmpty()) field = address else throw EventValidationException("이벤트 주소는 필수적으로 입력되어야 합니다.")
+            if (address != null && address.isEmpty()) {
+                throw EventValidationException("이벤트 주소는 필수적으로 입력되어야 합니다.")
+            }
+            field = address
         }
     @Column(name = "events_price", nullable = false)
     var price: Int? = null
@@ -111,7 +119,7 @@ class Event(name: String?,
     var attendances: MutableSet<Attendance> = mutableSetOf()
         private set
     @OneToOne
-    private var register: Account? = null
+    var register: Account? = null
         set (register) {
             if (ObjectUtils.isEmpty(register)) {
                 throw EventValidationException("이벤트 등록자는 필수 항목입니다.")
@@ -119,12 +127,52 @@ class Event(name: String?,
             field = register
         }
 
+    @Enumerated(EnumType.STRING)
+    var eventStatus = EventStatus.DRAFT
+        private set
+
     fun addAttendance(attendance: Attendance) {
         if (!isEnableAttend()) {
             throw EventValidationException("이벤트 등록 인원을 초과했습니다.")
         }
         attendance.attendEvent = this
         this.attendances.add(attendance)
+    }
+
+    fun updateEvent(account: Account, eventRequestDto: EventDto.EventRequestDto) {
+        if (!isEventOwner(account)) {
+            throw UnAuthorizationException("이벤트 등록자만 수정할 수 있습니다.")
+        }
+
+        if (!this.isBeforeOfAmendDeadLine()) {
+            throw EventValidationException("이벤트는 시작 시간보다 최소 1주일 전에만 수정 가능합니다.")
+        }
+
+        this.address = eventRequestDto.address
+        this.availableParticipant = eventRequestDto.availableParticipant
+        this.beginEnrollmentDateTime = eventRequestDto.beginEnrollmentDateTime
+        this.beginEventDateTime = eventRequestDto.beginEventDateTime
+        this.contents = eventRequestDto.contents
+        this.endEnrollmentDateTime = eventRequestDto.endEnrollmentDateTime
+        this.endEventDateTime = eventRequestDto.endEventDateTime
+        this.name = eventRequestDto.name
+        this.price = eventRequestDto.price
+    }
+
+    fun delete(account: Account) {
+        if (!isEventOwner(account)) {
+            throw UnAuthorizationException("이벤트 등록자만 삭제할 수 있습니다.")
+        }
+
+        if (!attendances.isEmpty()) {
+            throw EventValidationException("이벤트 참여자가 1명이라도 존재하면 이벤트를 삭제할 수 없습니다.")
+        }
+        super.delete()
+    }
+
+    private fun isBeforeOfAmendDeadLine(): Boolean {
+        val deadLine = beginEventDateTime.minusDays(7)
+        return !LocalDateTime.now().isAfter(deadLine)
     }
 
     private fun isEventOwner(account: Account): Boolean {
@@ -147,6 +195,7 @@ class Event(name: String?,
         this.contents = contents
         this.address = address
         this.price = price
+        this.register = register
         this.availableParticipant = availableParticipant
         this.beginEnrollmentDateTime = beginEnrollmentDateTime
         this.endEnrollmentDateTime = endEnrollmentDateTime
