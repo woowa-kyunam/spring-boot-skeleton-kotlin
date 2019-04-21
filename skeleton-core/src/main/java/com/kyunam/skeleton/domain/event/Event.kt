@@ -159,7 +159,6 @@ class Event(name: String?,
         this.price = eventRequestDto.price
     }
 
-    @Override
     fun delete(account: Account) {
         if (!isEventOwner(account)) {
             throw UnAuthorizationException("이벤트 등록자만 삭제할 수 있습니다.")
