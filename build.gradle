@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-    id "org.asciidoctor.convert" version "2.1.0"
+    id 'org.asciidoctor.convert' version '2.1.0'
 }
 
 def static getDate() {
@@ -85,32 +85,30 @@ def restDocsProject = [
         project(':skeleton-api')
 ]
 
-configure(restDocsProject) {
-
-    apply plugin: "org.asciidoctor.convert"
+configure(restDocsProject){
 
     ext {
         snippetsDir = file('build/generated-snippets')
     }
 
+    apply plugin: 'org.asciidoctor.convert'
+
     asciidoctor {
-        inputs.dir snippetsDir
         dependsOn test
+        attributes 'snippets': snippetsDir
     }
 
     bootJar {
         dependsOn asciidoctor
-        from ("${asciidoctor.outputDir}/html5") {
-            into 'static/docs'
+        doLast {
+            copy {
+                from("${asciidoctor.outputDir}/html5/")
+                into 'src/main/resources/static/docs'
+            }
         }
     }
 
-    build {
-        dependsOn asciidoctor
-    }
-
     dependencies {
-        asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
         testImplementation 'org.springframework.security:spring-security-test'
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     }
