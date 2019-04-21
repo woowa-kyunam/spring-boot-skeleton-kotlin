@@ -31,7 +31,7 @@ class EventController(
         val resource = getDefaultEventResource(savedEventResponse)
         resource.add(linkTo(EventController::class.java).slash(savedEventResponse.id).withRel("update"))
         resource.add(linkTo(EventController::class.java).slash(savedEventResponse.id).withRel("delete"))
-        resource.add(Link("/docs/index.html#resources-events-create", "profile"))
+        resource.add(Link("/docs/events/index.html#resources-events-create", "profile"))
         val uri = linkTo(EventController::class.java).slash(savedEventResponse.id).toUri()
         return ResponseEntity.created(uri).body(resource)
     }
@@ -44,15 +44,17 @@ class EventController(
         val updatedEventResponse = eventService.updateEvent(id, eventRequestDto, loginUser)
         val resource = getDefaultEventResource(updatedEventResponse)
         resource.add(linkTo(EventController::class.java).slash(updatedEventResponse.id).withRel("delete"))
-        resource.add(Link("/docs/index.html#resources-events-update", "profile"))
+        resource.add(Link("/docs/events/index.html#resources-events-update", "profile"))
         return ResponseEntity.ok(resource)
     }
 
     @DeleteMapping("/{id}")
     fun deleteEvent(@PathVariable id: Long, @LoginUser loginUser: Account): ResponseEntity<*> {
         val deletedEventResponse = eventService.deleteEvent(id, loginUser)
-        val resource = getDefaultEventResource(deletedEventResponse)
-        resource.add(Link("/docs/index.html#resources-events-update", "profile"))
+        val resource = Resource(deletedEventResponse.id)
+        resource.add(linkTo(EventController::class.java).withRel("events"))
+
+        resource.add(Link("/docs/events/index.html#resources-events-delete", "profile"))
         return ResponseEntity.ok(resource)
     }
 

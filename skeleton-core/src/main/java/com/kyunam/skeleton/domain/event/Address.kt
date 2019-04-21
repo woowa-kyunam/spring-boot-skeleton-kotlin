@@ -1,5 +1,6 @@
 package com.kyunam.skeleton.domain.event
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.kyunam.skeleton.common.exception.EventValidationException
 import javax.persistence.Embeddable
 
@@ -11,6 +12,7 @@ class Address(
         postalCode: String
 ) {
 
+    @JsonIgnore
     fun isEmpty(): Boolean {
         if (this.localAddress.isNullOrEmpty()) return true
         if (this.roadAddress.isNullOrEmpty()) return true
