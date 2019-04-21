@@ -19,13 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.support.MessageSourceAccessor
 import org.springframework.http.MediaType
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.transaction.annotation.Transactional
 
 
 @Transactional
@@ -152,7 +152,10 @@ internal class EventControllerTest : ControllerTest() {
                 .content(this.objectMapper.writeValueAsString(updateEventRequest)))
                 .andDo(print())
                 .andExpect(status().isForbidden)
-                .andExpect(jsonPath("content").exists())
+                .andExpect(jsonPath("status").exists())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("errorMessage").exists())
+                .andExpect(jsonPath("debugMessage").exists())
     }
 
     @Test
