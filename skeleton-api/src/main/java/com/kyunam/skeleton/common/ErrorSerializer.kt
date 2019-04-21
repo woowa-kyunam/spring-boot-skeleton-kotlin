@@ -22,12 +22,7 @@ class ErrorSerializer(
                 gen.writeStringField("field", it.field)
                 gen.writeStringField("objectName", it.objectName)
                 gen.writeStringField("defaultMessage", getErrorMessage(it))
-                val rejectedValue = it.rejectedValue
-                if (rejectedValue != null) {
-                    gen.writeStringField("rejectedValue", rejectedValue!!.toString())
-                } else {
-                    gen.writeStringField("rejectedValue", "")
-                }
+                gen.writeStringField("rejectedValue", it.rejectedValue.toString())
                 gen.writeEndObject()
             } catch (ex: IOException) {
                 ex.printStackTrace()

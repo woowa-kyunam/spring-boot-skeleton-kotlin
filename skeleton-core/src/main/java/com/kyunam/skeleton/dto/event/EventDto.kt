@@ -1,6 +1,7 @@
 package com.kyunam.skeleton.dto.event
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.kyunam.skeleton.common.enum.EventStatus
 import com.kyunam.skeleton.domain.event.Address
 import com.kyunam.skeleton.domain.event.Event
@@ -39,6 +40,7 @@ class EventDto {
     )
 
     data class EventResponseDto(
+            @field:JsonIgnore
             var id: Long,
             var name: String?,
             var contents: String?,
@@ -58,7 +60,7 @@ class EventDto {
     ) {
         companion object {
             fun toPersonRecord(event: Event) = EventResponseDto(
-                    id = event.id!!,
+                    id = event.id,
                     name = event.name,
                     contents = event.contents,
                     price = event.price,
